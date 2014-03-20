@@ -1,3 +1,10 @@
+Keystone-service create
+--------------------------
+
+keystone service-create --name swift --type object-store
+
+keystone endpoint-create --region RegionOne --service-id 1132aee9446b4efa83d41375daf231c5 --publicurl http://ceph-node1.ashish1.com/swift/v1 --internalurl http://ceph-node1.ashish1.com/swift/v1 --adminurl http://ceph-node1.ashish1.com/swift/v1
+
 Keystone Endpoint list
 ------------------------
 
@@ -14,7 +21,6 @@ ceph@ceph-node1:~$ keystone endpoint-list
 | b66b5083134b48f48aca221b54c62805 | RegionOne |         http://10.0.2.15:9292          |         http://10.0.2.15:9292          |         http://10.0.2.15:9292          | ee070b439c8f4b08b857e1ff8008be44 |
 | b9940b6fb54a473ab2aa8450166f1491 | RegionOne | http://10.0.2.15:8776/v1/$(tenant_id)s | http://10.0.2.15:8776/v1/$(tenant_id)s | http://10.0.2.15:8776/v1/$(tenant_id)s | 9afe00fe8150441884b1e6ef0b233049 |
 | beeabda778424130b56e2a5600d9502e | RegionOne | http://10.0.2.15:8776/v2/$(tenant_id)s | http://10.0.2.15:8776/v2/$(tenant_id)s | http://10.0.2.15:8776/v2/$(tenant_id)s | 65816f3ecdb24f66a397324297184d85 |
-| c96c2c9e84114dc8a9a26014fd71bba9 | RegionOne |       http://10.0.2.15/swift/v1        |       http://10.0.2.15/swift/v1        |       http://10.0.2.15/swift/v1        | 1132aee9446b4efa83d41375daf231c5 |
 +----------------------------------+-----------+----------------------------------------+----------------------------------------+----------------------------------------+----------------------------------+
 
 
