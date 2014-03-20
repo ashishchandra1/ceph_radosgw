@@ -192,3 +192,8 @@ test3
 Authentication using RadosGW
 ==============================
 
+LIST CONTAINERS
+----------------
+ceph@ceph-node1:~$ swift -V 1.0 -A http://ceph-node1.ashish1.com/auth -U ashish:swift -K fMmmgfE64czkvLGGjx1rrR23j8PcvwfVRQUVz267 list
+test
+test1
