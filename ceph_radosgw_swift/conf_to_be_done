@@ -1,12 +1,16 @@
 Keystone-service create
---------------------------
+=================================
 
 keystone service-create --name swift --type object-store
+
+
+Keystone endpoint-create
+=================================
 
 keystone endpoint-create --region RegionOne --service-id 1132aee9446b4efa83d41375daf231c5 --publicurl http://ceph-node1.ashish1.com/swift/v1 --internalurl http://ceph-node1.ashish1.com/swift/v1 --adminurl http://ceph-node1.ashish1.com/swift/v1
 
 Keystone Endpoint list
-------------------------
+=================================
 
 ceph@ceph-node1:~$ keystone endpoint-list
 +----------------------------------+-----------+----------------------------------------+----------------------------------------+----------------------------------------+----------------------------------+
@@ -24,8 +28,8 @@ ceph@ceph-node1:~$ keystone endpoint-list
 +----------------------------------+-----------+----------------------------------------+----------------------------------------+----------------------------------------+----------------------------------+
 
 
-Keystone user-list, role-list, tenat-list
------------------------------------------
+Keystone user-list, role-list, tenant-list
+==========================================
 
 ceph@ceph-node1:~$ keystone user-list
 +----------------------------------+----------+---------+----------------------+
@@ -58,13 +62,34 @@ ceph@ceph-node1:~$ keystone tenant-list
 | 318c28099ec3488ea9909c411cfe6808 |        demo        |   True  |
 | 41da775285c6444a97dc5952adf34c28 | invisible_to_admin |   True  |
 | 5210df6605f345aa81e6abab53ff9302 |      service       |   True  |
-+----------------------------------+--------------------+---------+
-ceph@ceph-node1:~$ 
 
-**************************************************************************************************************************************************************************************************************************************************************************************************************************************************
+
+************************************************************************************************************************************************************************************************************************************************************************************************************************************************
+
+
+/etc/hosts
+=================================
+
+ceph@ceph-node1:~$ cat /etc/hosts
+127.0.0.1	localhost
+10.0.1.10      ceph-client.ashish.com  ceph-client
+
+# Configure two hostnames for ceph-node1 as it runs both horizon and radosgw
+10.0.1.11      ceph-node1.ashish.com  ceph-node1.ashish1.com ceph-node1
+10.0.1.12      ceph-node2.ashish.com   ceph-node2
+10.0.1.13      ceph-node3
+
+# The following lines are desirable for IPv6 capable hosts
+::1     ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+
 
 /etc/ceph/ceph.conf
----------------------
+=================================
+
 ceph@ceph-node1:~$ cat /etc/ceph/ceph.conf
 [global]
 fsid = d9383429-c15e-485f-98ad-d45ac68de66b
@@ -80,7 +105,7 @@ filestore_xattr_use_omap = true
         keyring = /etc/ceph/keyring.radosgw.gateway
         rgw socket path = /tmp/radosgw.sock
         log file = /var/log/ceph/radosgw.log
-        rgw keystone url = http://10.0.2.15:35357
+        rgw keystone url = http://10.0.2.15:35357            # Keystone url could be any IP or hostname configured in /etc/hosts , port no is required
         rgw keystone admin token = ashish
         rgw keystone accepted roles = admin, Member
         rgw keystone token cache size = 100
@@ -89,9 +114,12 @@ filestore_xattr_use_omap = true
         #nss db path = /var/lib/ceph/nss
 
 
+NOTE: While configuring "rgw.conf" in ServerName add 2nd fqdn as both horizon and radosgw(FASTCGI) run on port 80. So to avoid confusion either both of them
+      should be running on different port (in horizon.conf enter (Listen 9999 and VirtualHost *:9999> )) or use two different fqdn configured in /etc/hosts.
 
 /etc/apache2/sites-available/rgw.conf
--------------------------------------
+=====================================
+
 ceph@ceph-node1:/etc/apache2/sites-available$ cat rgw.conf 
 FastCgiExternalServer /var/www/s3gw.fcgi -socket /tmp/radosgw.sock
 
@@ -118,36 +146,29 @@ FastCgiExternalServer /var/www/s3gw.fcgi -socket /tmp/radosgw.sock
         ServerSignature Off
 </VirtualHost>
 
+************************************************************************************************************************************************************************************************************************************************************************************************************************************************
 
-/etc/hosts
-----------------
+TESTING SWIFT APIS
 
-ceph@ceph-node1:/etc/apache2/sites-available$ cat /etc/hosts
-127.0.0.1	localhost
-10.0.1.10      ceph-client.ashish.com  ceph-client
-10.0.1.11      ceph-node1.ashish.com  ceph-node1.ashish1.com ceph-node1
-10.0.1.12      ceph-node2.ashish.com   ceph-node2
-10.0.1.13      ceph-node3
+** Authentication using Keystone
+============================================
 
-# The following lines are desirable for IPv6 capable hosts
-::1     ip6-localhost ip6-loopback
-fe00::0 ip6-localnet
-ff00::0 ip6-mcastprefix
-ff02::1 ip6-allnodes
-ff02::2 ip6-allrouters
+NOTE: We can use any IP address configured in /etc/hosts to authenticate swift, as long as it is with port no(5000 or 35357).
+We can use:
+           10.0.1.11:5000 
+           10.0.2.15:5000
+           ceph-node1.ashish.com:5000
+           ceph-node.ashish1.com:5000
 
-TESTING
-**********************
-
-Authentication using Keystone
--------------------------------
-
+LIST ALL CONTAINERS
+----------------------
 ceph@ceph-node1:~$ swift -V 2.0 -A http://10.0.2.15:5000/v2.0 -U admin:admin -K ashish  list
 ashish
 test2
 test3
 
-** STAT
+SWIFT STAT
+------------------
 ceph@ceph-node1:~$ swift -V 2.0 -A http://10.0.2.15:5000/v2.0 -U admin:admin -K ashish  stat
        Account: v1
     Containers: 3
@@ -158,8 +179,8 @@ ceph@ceph-node1:~$ swift -V 2.0 -A http://10.0.2.15:5000/v2.0 -U admin:admin -K 
 X-Account-Bytes-Used-Actual: 466944
   Content-Type: text/plain; charset=utf-8
 
-** UPLOAD A NEW OBJECT
-
+UPLOAD A NEW OBJECT
+---------------------
 ceph@ceph-node1:~$ swift -V 2.0 -A http://10.0.2.15:5000/v2.0 -U admin:admin -K ashish  upload new_cont new_file_1
 new_file_1
 ceph@ceph-node1:~$ swift -V 2.0 -A http://10.0.2.15:5000/v2.0 -U admin:admin -K ashish  list
@@ -169,5 +190,5 @@ test2
 test3
 
 Authentication using RadosGW
------------------------------
+==============================
 
