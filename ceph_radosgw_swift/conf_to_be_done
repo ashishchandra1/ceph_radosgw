@@ -130,3 +130,38 @@ ff00::0 ip6-mcastprefix
 ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 
+TESTING
+**********************
+
+Authentication using Keystone
+-------------------------------
+
+ceph@ceph-node1:~$ swift -V 2.0 -A http://10.0.2.15:5000/v2.0 -U admin:admin -K ashish  list
+ashish
+test2
+test3
+
+** STAT
+ceph@ceph-node1:~$ swift -V 2.0 -A http://10.0.2.15:5000/v2.0 -U admin:admin -K ashish  stat
+       Account: v1
+    Containers: 3
+       Objects: 4
+         Bytes: 455756
+          Vary: Accept-Encoding
+        Server: Apache/2.2.22 (Ubuntu)
+X-Account-Bytes-Used-Actual: 466944
+  Content-Type: text/plain; charset=utf-8
+
+** UPLOAD A NEW OBJECT
+
+ceph@ceph-node1:~$ swift -V 2.0 -A http://10.0.2.15:5000/v2.0 -U admin:admin -K ashish  upload new_cont new_file_1
+new_file_1
+ceph@ceph-node1:~$ swift -V 2.0 -A http://10.0.2.15:5000/v2.0 -U admin:admin -K ashish  list
+ashish
+new_cont
+test2
+test3
+
+Authentication using RadosGW
+-----------------------------
+
