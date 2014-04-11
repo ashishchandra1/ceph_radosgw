@@ -1,0 +1,41 @@
+ceph_radosgw
+============
+
+X-Storage-Url: http://10.2.3.181:8080/v1/AUTH_test
+X-Auth-Token: AUTH_tk16c37223a5b64a3c931076b7e0b70be7
+
+
+
+Get tokens:
+===============
+curl -v -H 'X-Storage-User: test:tester' -H 'X-Storage-Pass: testing' http://10.2.3.181:8080/auth/v1.0
+
+Get Accounts:
+==================
+curl -v -H 'X-Auth-Token: AUTH_tk16c37223a5b64a3c931076b7e0b70be7' http://10.2.3.181:8080/v1/AUTH_test
+
+Check if swift is working:
+======================================
+swift -A http://10.2.3.181:8080/auth/v1.0 -U test:tester -K testing stat
+
+
+Get Containers:
+=================
+curl -v -H "X-Auth-Token: AUTH_tk16c37223a5b64a3c931076b7e0b70be7" -X GET http://10.2.3.181:8080/v1/AUTH_test
+
+PUT Containers:
+=================
+curl -v -H "X-Auth-Token: AUTH_tk16c37223a5b64a3c931076b7e0b70be7" -X PUT http://10.2.3.181:8080/v1/AUTH_test/test_r1_1
+
+DELETE Containers:
+==================
+
+curl -v -H "X-Auth-Token: AUTH_tk16c37223a5b64a3c931076b7e0b70be7" -X DELETE http://10.2.3.181:8080/v1/AUTH_test/test_r1_1
+
+
+Get Object:
+================
+GET: curl -H "X-Auth-Token: AUTH_tk16c37223a5b64a3c931076b7e0b70be7" -X GET http://10.2.3.181:8080/v1/AUTH_test/test_r1_1
+PUT: curl -H "X-Auth-Token: AUTH_tk16c37223a5b64a3c931076b7e0b70be7" -f -X PUT -T test1.py http://10.2.3.181:8080/v1/AUTH_test/test_r1_1/test1
+DELETE: curl -H "X-Auth-Token: AUTH_tk16c37223a5b64a3c931076b7e0b70be7" -X DELETE http://10.2.3.181:8080/v1/AUTH_test/test_r1_1/test_obj
+
