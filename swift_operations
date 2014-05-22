@@ -39,3 +39,29 @@ GET: curl -H "X-Auth-Token: AUTH_tk16c37223a5b64a3c931076b7e0b70be7" -X GET http
 PUT: curl -H "X-Auth-Token: AUTH_tk16c37223a5b64a3c931076b7e0b70be7" -f -X PUT -T test1.py http://10.2.3.181:8080/v1/AUTH_test/test_r1_1/test1
 DELETE: curl -H "X-Auth-Token: AUTH_tk16c37223a5b64a3c931076b7e0b70be7" -X DELETE http://10.2.3.181:8080/v1/AUTH_test/test_r1_1/test_obj
 
+
+*****************************************************************************************************************************
+
+Fix for wrong container info
+
+def swift_get_container(request, container_name):
+    headers= swift_api(request).head_container(container_name)
+    timestamp = None
+    try:
+        ts_float = float(headers.get('x-timestamp'))
+        timestamp = timeutils.iso8601_from_timestamp(ts_float)
+    except Exception:
+        pass
+    container_info = {
+        'name': container_name,
+        'container_object_count': headers.get('x-container-object-count'),
+        'container_bytes_used': headers.get('x-container-bytes-used'),
+        'timestamp': timestamp,
+    }
+
+
+
+
+
+
+
