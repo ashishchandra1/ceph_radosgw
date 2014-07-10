@@ -7,7 +7,7 @@ keystone service-create --name swift --type object-store
 Keystone endpoint-create
 =================================
 
-keystone endpoint-create --region RegionOne --service-id 1132aee9446b4efa83d41375daf231c5 --publicurl http://ceph-node1.ashish1.com/swift/v1 --internalurl http://ceph-node1.ashish1.com/swift/v1 --adminurl http://ceph-node1.ashish1.com/swift/v1
+keystone endpoint-create --region RegionOne --service-id 1132aee9446b4efa83d41375daf231c5 --publicurl http://firefly-master.ashish.com/swift/v1 --internalurl http://firefly-master.ashish.com/swift/v1 --adminurl http://firefly-master.ashish.com/swift/v1
 
 Keystone Endpoint list
 =================================
@@ -19,7 +19,7 @@ ceph@ceph-node1:~$ keystone endpoint-list
 | 2c54e10bfeea487581bbdba35c3b134b | RegionOne | http://10.0.2.15:8774/v2/$(tenant_id)s | http://10.0.2.15:8774/v2/$(tenant_id)s | http://10.0.2.15:8774/v2/$(tenant_id)s | d63219e623ea4621a55aab63dee61ce2 |
 | 3b3c82da7c334d8cae520c2575bbbf56 | RegionOne |         http://10.0.2.15:3333          |         http://10.0.2.15:3333          |         http://10.0.2.15:3333          | 131c1bf1e25a4e0195de8760154e1e43 |
 | 49320acf6fd84651844cd61e07fe5cd6 | RegionOne |  http://10.0.2.15:8773/services/Cloud  |  http://10.0.2.15:8773/services/Cloud  |  http://10.0.2.15:8773/services/Admin  | abfbe20901ce4ea880545d2ff6446b1f |
-| 98d2f97a29c2488dbcb4f48ba82d8edf | RegionOne | http://ceph-node1.ashish1.com/swift/v1 | http://ceph-node1.ashish1.com/swift/v1 | http://ceph-node1.ashish1.com/swift/v1 | 1132aee9446b4efa83d41375daf231c5 |
+| 98d2f97a29c2488dbcb4f48ba82d8edf | RegionOne | http://firefly-master.ashish.com/swift/v1 | http://firefly-master.ashish.com/swift/v1 | http://firefly-master.ashish.com/swift/v1 | 1132aee9446b4efa83d41375daf231c5 |
 | 9b552ab4029946bc9129ec82c6688ba2 | RegionOne |        http://10.0.2.15:8774/v3        |        http://10.0.2.15:8774/v3        |        http://10.0.2.15:8774/v3        | 82f67379e4124623abe12b46883a0408 |
 | a7cc03ca18364cd588098482f11a379e | RegionOne |       http://10.0.2.15:5000/v2.0       |       http://10.0.2.15:5000/v2.0       |      http://10.0.2.15:35357/v2.0       | fdd40e1249124d7b9dcd324b1d66d561 |
 | b66b5083134b48f48aca221b54c62805 | RegionOne |         http://10.0.2.15:9292          |         http://10.0.2.15:9292          |         http://10.0.2.15:9292          | ee070b439c8f4b08b857e1ff8008be44 |
@@ -27,45 +27,7 @@ ceph@ceph-node1:~$ keystone endpoint-list
 | beeabda778424130b56e2a5600d9502e | RegionOne | http://10.0.2.15:8776/v2/$(tenant_id)s | http://10.0.2.15:8776/v2/$(tenant_id)s | http://10.0.2.15:8776/v2/$(tenant_id)s | 65816f3ecdb24f66a397324297184d85 |
 +----------------------------------+-----------+----------------------------------------+----------------------------------------+----------------------------------------+----------------------------------+
 
-
-Keystone user-list, role-list, tenant-list
-==========================================
-
-ceph@ceph-node1:~$ keystone user-list
-+----------------------------------+----------+---------+----------------------+
-|                id                |   name   | enabled |        email         |
-+----------------------------------+----------+---------+----------------------+
-| b2b4e41a3b6648d6b1ce2d4398baf00b |  admin   |   True  |  admin@example.com   |
-| c30e7a4b2cb04fa2bd099bbbd3e08b16 | alt_demo |   True  | alt_demo@example.com |
-| 1e1101128e834b54b74eaae03a6300bf |  cinder  |   True  |  cinder@example.com  |
-| 4002e549f786427692afb5ee3e82a0b4 |   demo   |   True  |   demo@example.com   |
-| b2a063d1bdf0469aa5437bd9fc319204 |  glance  |   True  |  glance@example.com  |
-| 782744ca19f945438df546a1e8e3ec91 |   nova   |   True  |   nova@example.com   |
-+----------------------------------+----------+---------+----------------------+
-ceph@ceph-node1:~$ keystone role-list
-+----------------------------------+---------------+
-|                id                |      name     |
-+----------------------------------+---------------+
-| 3e43d423ed244c3183d6b6a961a33c46 |     Member    |
-| efb44fc95b404411929995d50d3114f9 | ResellerAdmin |
-| 9fe2ff9ee4384b1894a90878d3e92bab |    _member_   |
-| 63d58a7d68f14b0f90e190ab47b71741 |     admin     |
-| eaf4875af767425f87eb23744e9d3490 |  anotherrole  |
-| 4c224bf836b243a78bf424488678d09f |    service    |
-+----------------------------------+---------------+
-ceph@ceph-node1:~$ keystone tenant-list
-+----------------------------------+--------------------+---------+
-|                id                |        name        | enabled |
-+----------------------------------+--------------------+---------+
-| f695706496f94847810abb8f840ac065 |       admin        |   True  |
-| 4ab70a98ebef439f9422bfa53fa9dd5c |      alt_demo      |   True  |
-| 318c28099ec3488ea9909c411cfe6808 |        demo        |   True  |
-| 41da775285c6444a97dc5952adf34c28 | invisible_to_admin |   True  |
-| 5210df6605f345aa81e6abab53ff9302 |      service       |   True  |
-
-
 ************************************************************************************************************************************************************************************************************************************************************************************************************************************************
-
 
 /etc/hosts
 =================================
@@ -75,9 +37,7 @@ ceph@ceph-node1:~$ cat /etc/hosts
 10.0.1.10      ceph-client.ashish.com  ceph-client
 
 # Configure two hostnames for ceph-node1 as it runs both horizon and radosgw
-10.0.1.11      ceph-node1.ashish.com  ceph-node1.ashish1.com ceph-node1
-10.0.1.12      ceph-node2.ashish.com   ceph-node2
-10.0.1.13      ceph-node3
+10.0.1.11      firefly-master.ashish.com  firefly-master.ashish1.com ceph-node1
 
 # The following lines are desirable for IPv6 capable hosts
 ::1     ip6-localhost ip6-loopback
@@ -118,11 +78,11 @@ auth_client_required = cephx
 filestore_xattr_use_omap = true
 
 [client.radosgw.gateway]
-        host = ceph-node1
-        keyring = /etc/ceph/keyring.radosgw.gateway
-        rgw socket path = /tmp/radosgw.sock
-        log file = /var/log/ceph/radosgw.log
-        rgw keystone url = http://10.0.2.15:35357            # Keystone url could be any IP or hostname configured in /etc/hosts , port no is required
+        host = firefly-master
+        keyring = /etc/ceph/ceph.client.radosgw.keyring
+        rgw socket path = /var/run/ceph/ceph.radosgw.gateway.fastcgi.sock
+        log file = /var/log/ceph/client.radosgw.gateway.log
+        rgw keystone url = http://10.0.2.15:35357 
         rgw keystone admin token = ashish
         rgw keystone accepted roles = admin, Member
         rgw keystone token cache size = 100
@@ -138,29 +98,32 @@ NOTE: While configuring "rgw.conf" in ServerName add 2nd fqdn as both horizon an
 =====================================
 
 ceph@ceph-node1:/etc/apache2/sites-available$ cat rgw.conf 
-FastCgiExternalServer /var/www/s3gw.fcgi -socket /tmp/radosgw.sock
+FastCgiExternalServer /var/www/s3gw.fcgi -socket /var/run/ceph/ceph.radosgw.gateway.fastcgi.sock
 
 <VirtualHost *:80>
-        ServerName ceph-node1.ashish1.com
-        ServerAdmin ashish@ashish.com
-        DocumentRoot /var/www
-        
-        RewriteEngine On
-        RewriteRule ^/([a-zA-Z0-9-_.]*)([/]?.*) /s3gw.fcgi?page=$1&params=$2&%{QUERY_STRING} [E=HTTP_AUTHORIZATION:%{HTTP:Authorization},L] 
-        <IfModule mod_fastcgi.c>
-                <Directory /var/www>
-                        Options +ExecCGI
-                        AllowOverride All
-                        SetHandler fastcgi-script
-                        Order allow,deny
-                        Allow from all
-                        AuthBasicAuthoritative Off
-                </Directory>
-        </IfModule>
-        AllowEncodedSlashes On
-        ErrorLog /var/log/apache2/error.log
-        CustomLog /var/log/apache2/access.log combined
-        ServerSignature Off
+
+	ServerName firefly-master.ashish.com
+	ServerAdmin ashish@ashish.com
+	DocumentRoot /var/www
+	RewriteEngine On
+	RewriteRule  ^/(.*) /s3gw.fcgi?%{QUERY_STRING} [E=HTTP_AUTHORIZATION:%{HTTP:Authorization},L]
+
+	<IfModule mod_fastcgi.c>
+   	<Directory /var/www>
+			Options +ExecCGI
+			AllowOverride All
+			SetHandler fastcgi-script
+			Order allow,deny
+			Allow from all
+			AuthBasicAuthoritative Off
+		</Directory>
+	</IfModule>
+
+	AllowEncodedSlashes On
+	ErrorLog /var/log/apache2/error.log
+	CustomLog /var/log/apache2/access.log combined
+	ServerSignature Off
+
 </VirtualHost>
 
 ************************************************************************************************************************************************************************************************************************************************************************************************************************************************
@@ -211,6 +174,6 @@ Authentication using RadosGW
 
 LIST CONTAINERS
 ----------------
-ceph@ceph-node1:~$ swift -V 1.0 -A http://ceph-node1.ashish1.com/auth -U ashish:swift -K fMmmgfE64czkvLGGjx1rrR23j8PcvwfVRQUVz267 list
+ceph@ceph-node1:~$ swift -V 1.0 -A http://firefly-master.ashish.com/auth -U ashish:swift -K fMmmgfE64czkvLGGjx1rrR23j8PcvwfVRQUVz267 list
 test
 test1
